@@ -1,0 +1,7 @@
+# Not archived
+tests export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.github export-ignore
+README.md export-ignore
+

@@ -1,0 +1,33 @@
+{
+    "name": "jeancz/czech-vat",
+    "description": "Czech VAT Return (DPHDP3) and VAT Control Statement (DPHKH1) XML generator",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Jan Smrčka",
+            "email": "jan.smrcka@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "JeanCz\\CzechVat\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "JeanCz\\CzechVat\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable"
+}
