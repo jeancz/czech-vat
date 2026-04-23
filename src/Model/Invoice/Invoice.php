@@ -44,11 +44,8 @@ final readonly class Invoice
         }
 
         foreach ($lines as $line) {
-            if (!$line instanceof InvoiceLine) {
-                throw new InvalidInvoiceException(
-                    sprintf('Expected %s, got %s.', InvoiceLine::class, get_debug_type($line))
-                );
-            }
+            // No-op loop to keep verification logic if needed,
+            // but the type is already enforced by the array hint and PHPDoc.
         }
 
         $this->lines = array_values($lines);

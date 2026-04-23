@@ -76,7 +76,7 @@ abstract class AbstractXmlBuilder
      */
     protected function numericVatId(string $vatId): string
     {
-        return preg_replace('/^[A-Z]+/i', '', $vatId);
+        return (string) preg_replace('/^[A-Z]+/i', '', $vatId);
     }
 
     /**

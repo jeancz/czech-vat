@@ -84,7 +84,7 @@ final readonly class TaxPeriod
             return new \DateTimeImmutable(sprintf('%04d-%02d-01', $this->year, $this->month));
         }
 
-        $firstMonth = ($this->quarter - 1) * 3 + 1;
+        $firstMonth = (($this->quarter ?? 1) - 1) * 3 + 1;
 
         return new \DateTimeImmutable(sprintf('%04d-%02d-01', $this->year, $firstMonth));
     }

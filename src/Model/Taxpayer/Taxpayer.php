@@ -45,7 +45,7 @@ final readonly class Taxpayer
         /** Territorial workplace code (optional, číselník PRACUFO) */
         public readonly ?string $taxOfficeWorkplaceCode,
     ) {
-        $this->dicNumeric = preg_replace('/^[A-Z]+/', '', strtoupper($vatId));
+        $this->dicNumeric = (string) preg_replace('/^[A-Z]+/', '', strtoupper($vatId));
     }
 
     /**
@@ -80,7 +80,7 @@ final readonly class Taxpayer
             street: $street,
             houseNumber: $houseNumber,
             city: $city,
-            postalCode: preg_replace('/\s+/', '', $postalCode),
+            postalCode: (string) preg_replace('/\s+/', '', $postalCode),
             country: $country,
             companyName: $companyName,
             firstName: null,
@@ -127,7 +127,7 @@ final readonly class Taxpayer
             street: $street,
             houseNumber: $houseNumber,
             city: $city,
-            postalCode: preg_replace('/\s+/', '', $postalCode),
+            postalCode: (string) preg_replace('/\s+/', '', $postalCode),
             country: $country,
             companyName: null,
             firstName: $firstName,
@@ -142,7 +142,7 @@ final readonly class Taxpayer
      */
     private static function assertVatId(string $vatId): void
     {
-        if (!preg_match('/^[A-Z]{2}[0-9]{1,10}$/', strtoupper($vatId))) {
+        if (preg_match('/^[A-Z]{2}[0-9]{1,10}$/', strtoupper($vatId)) !== 1) {
             throw new InvalidTaxpayerException(
                 sprintf('VAT ID "%s" has an invalid format. Expected e.g. "CZ12345678".', $vatId)
             );

@@ -85,7 +85,7 @@ final readonly class VatRates
      * Build a fully custom rate schedule.
      * Only the types you supply will be considered valid.
      *
-     * @param array<VatRateType, int> $rates
+     * @param array<string|int, int> $rates keyed by VatRateType value or name
      *
      * @throws InvalidVatRateException when a percentage is negative
      */
@@ -94,17 +94,21 @@ final readonly class VatRates
         $normalized = [];
 
         foreach ($rates as $type => $percentage) {
-            VatRateType::tryFrom($type) ?: throw new InvalidVatRateException(
-                sprintf('Keys must be %s instances, %s given.', VatRateType::class, get_debug_type($type))
-            );
+            $typeInstance = VatRateType::tryFrom((string) $type);
 
-            if ($percentage < 0) {
+            if ($typeInstance === null) {
                 throw new InvalidVatRateException(
-                    sprintf('VAT percentage cannot be negative, %d given for %s.', $percentage, $type)
+                    sprintf('Keys must be valid %s values, %s given.', VatRateType::class, get_debug_type($type))
                 );
             }
 
-            $normalized[$type] = $percentage;
+            if ($percentage < 0) {
+                throw new InvalidVatRateException(
+                    sprintf('VAT percentage cannot be negative, %d given for %s.', $percentage, $typeInstance->value)
+                );
+            }
+
+            $normalized[$typeInstance->value] = $percentage;
         }
 
         return new self($normalized);

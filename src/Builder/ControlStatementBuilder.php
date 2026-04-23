@@ -164,7 +164,7 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
             $el->setAttribute('c_radku', (string) $rowIdx++);
             $el->setAttribute('dic_odb', $invoice->partnerVatIdNumeric() ?? '');
             $el->setAttribute('c_evid_dd', $invoice->documentNumber ?? '');
-            $el->setAttribute('duzp', $this->formatDate($invoice->taxPointDate));
+            $el->setAttribute('duzp', $invoice->taxPointDate !== null ? $this->formatDate($invoice->taxPointDate) : '');
             $el->setAttribute('zakl_dane1', $this->formatDecimal($line->taxBase));
             $el->setAttribute('kod_pred_pl', '1');
             $kh->appendChild($el);
@@ -180,7 +180,7 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
             $el->setAttribute('c_radku', (string) $rowIdx++);
             $el->setAttribute('dic_odb', $invoice->partnerVatIdNumeric() ?? '');
             $el->setAttribute('c_evid_dd', $invoice->documentNumber ?? '');
-            $el->setAttribute('dppd', $this->formatDate($invoice->taxPointDate));
+            $el->setAttribute('dppd', $invoice->taxPointDate !== null ? $this->formatDate($invoice->taxPointDate) : '');
             $el->setAttribute('kod_rezim_pl', '0');
             $el->setAttribute('zdph_44', 'N');
             $this->setLineVatAttributes($el, $line);
@@ -231,7 +231,7 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
             $el->setAttribute('c_radku', (string) $rowIdx++);
             $el->setAttribute('dic_dod', $invoice->partnerVatIdNumeric() ?? '');
             $el->setAttribute('c_evid_dd', $invoice->supplierDocumentNumber ?? $invoice->documentNumber ?? '');
-            $el->setAttribute('duzp', $this->formatDate($invoice->taxPointDate));
+            $el->setAttribute('duzp', $invoice->taxPointDate !== null ? $this->formatDate($invoice->taxPointDate) : '');
             $el->setAttribute('kod_pred_pl', '1');
             $this->setLineVatAttributes($el, $line);
             $kh->appendChild($el);
@@ -247,7 +247,7 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
             $el->setAttribute('c_radku', (string) $rowIdx++);
             $el->setAttribute('dic_dod', $invoice->partnerVatIdNumeric() ?? '');
             $el->setAttribute('c_evid_dd', $invoice->supplierDocumentNumber ?? $invoice->documentNumber ?? '');
-            $el->setAttribute('dppd', $this->formatDate($invoice->taxPointDate));
+            $el->setAttribute('dppd', $invoice->taxPointDate !== null ? $this->formatDate($invoice->taxPointDate) : '');
             $el->setAttribute('pomer', 'N');
             $el->setAttribute('zdph_44', 'N');
             $this->setLineVatAttributes($el, $line);
@@ -284,9 +284,9 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
         }
 
         // All reduced rate issued tax bases → obrat5
-        $reducedIssuedBase = ($issuedTotals[VatRateType::Reduced->value]['taxBase'] ?? 0)
-                           + ($issuedTotals[VatRateType::SecondReduced->value]['taxBase'] ?? 0);
-        if ($reducedIssuedBase != 0) {
+        $reducedIssuedBase = ($issuedTotals[VatRateType::Reduced->value]['taxBase'] ?? 0.0)
+                           + ($issuedTotals[VatRateType::SecondReduced->value]['taxBase'] ?? 0.0);
+        if ($reducedIssuedBase !== 0.0) {
             $this->setAttr($el, 'obrat5', $this->formatDecimal($reducedIssuedBase));
         }
 
@@ -296,9 +296,9 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
         }
 
         // All reduced rate received tax bases → pln5
-        $reducedReceivedBase = ($receivedTotals[VatRateType::Reduced->value]['taxBase'] ?? 0)
-                             + ($receivedTotals[VatRateType::SecondReduced->value]['taxBase'] ?? 0);
-        if ($reducedReceivedBase != 0) {
+        $reducedReceivedBase = ($receivedTotals[VatRateType::Reduced->value]['taxBase'] ?? 0.0)
+                             + ($receivedTotals[VatRateType::SecondReduced->value]['taxBase'] ?? 0.0);
+        if ($reducedReceivedBase !== 0.0) {
             $this->setAttr($el, 'pln5', $this->formatDecimal($reducedReceivedBase));
         }
 

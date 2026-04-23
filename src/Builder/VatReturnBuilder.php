@@ -138,7 +138,7 @@ final class VatReturnBuilder extends AbstractXmlBuilder implements XmlGeneratorI
     {
         $totals = InvoiceCollection::aggregateByVatRateType($this->invoices->issued());
 
-        if (empty($totals)) {
+        if ($totals === []) {
             return;
         }
 
@@ -151,12 +151,12 @@ final class VatReturnBuilder extends AbstractXmlBuilder implements XmlGeneratorI
         }
 
         // Reduced rate slot — merges Reduced and SecondReduced
-        $reducedBase = ($totals[VatRateType::Reduced->value]['taxBase']       ?? 0)
-                     + ($totals[VatRateType::SecondReduced->value]['taxBase'] ?? 0);
-        $reducedVat  = ($totals[VatRateType::Reduced->value]['vat']           ?? 0)
-                     + ($totals[VatRateType::SecondReduced->value]['vat']     ?? 0);
+        $reducedBase = ($totals[VatRateType::Reduced->value]['taxBase']       ?? 0.0)
+                     + ($totals[VatRateType::SecondReduced->value]['taxBase'] ?? 0.0);
+        $reducedVat  = ($totals[VatRateType::Reduced->value]['vat']           ?? 0.0)
+                     + ($totals[VatRateType::SecondReduced->value]['vat']     ?? 0.0);
 
-        if ($reducedBase != 0 || $reducedVat != 0) {
+        if ($reducedBase !== 0.0 || $reducedVat !== 0.0) {
             $this->setAttr($el, 'obrat5', $this->formatWholeCrowns($reducedBase));
             $this->setAttr($el, 'dan5',   $this->formatWholeCrowns($reducedVat));
         }
@@ -176,26 +176,26 @@ final class VatReturnBuilder extends AbstractXmlBuilder implements XmlGeneratorI
     {
         $totals = InvoiceCollection::aggregateByVatRateType($this->invoices->received());
 
-        if (empty($totals)) {
+        if ($totals === []) {
             return;
         }
 
         $el = $this->dom->createElement('Veta4');
 
-        $vat23  = $totals[VatRateType::Standard->value]['vat']     ?? 0;
-        $base23 = $totals[VatRateType::Standard->value]['taxBase'] ?? 0;
+        $vat23  = $totals[VatRateType::Standard->value]['vat']     ?? 0.0;
+        $base23 = $totals[VatRateType::Standard->value]['taxBase'] ?? 0.0;
 
-        if ($base23 != 0 || $vat23 != 0) {
+        if ($base23 !== 0.0 || $vat23 !== 0.0) {
             $this->setAttr($el, 'pln23',         $this->formatWholeCrowns($base23));
             $this->setAttr($el, 'odp_tuz23_nar', $this->formatWholeCrowns($vat23));
         }
 
-        $vat5  = ($totals[VatRateType::Reduced->value]['vat']       ?? 0)
-               + ($totals[VatRateType::SecondReduced->value]['vat'] ?? 0);
-        $base5 = ($totals[VatRateType::Reduced->value]['taxBase']       ?? 0)
-               + ($totals[VatRateType::SecondReduced->value]['taxBase'] ?? 0);
+        $vat5  = ($totals[VatRateType::Reduced->value]['vat']       ?? 0.0)
+               + ($totals[VatRateType::SecondReduced->value]['vat'] ?? 0.0);
+        $base5 = ($totals[VatRateType::Reduced->value]['taxBase']       ?? 0.0)
+               + ($totals[VatRateType::SecondReduced->value]['taxBase'] ?? 0.0);
 
-        if ($base5 != 0 || $vat5 != 0) {
+        if ($base5 !== 0.0 || $vat5 !== 0.0) {
             $this->setAttr($el, 'pln5',         $this->formatWholeCrowns($base5));
             $this->setAttr($el, 'odp_tuz5_nar', $this->formatWholeCrowns($vat5));
         }
