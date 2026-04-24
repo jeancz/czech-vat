@@ -290,16 +290,29 @@ $taxpayer = Taxpayer::legalEntity(
 
 ```php
 $taxpayer = Taxpayer::naturalPerson(
-    vatId:        'CZ7001011234',
-    taxOfficeCode:'451',
-    firstName:    'Jan',
-    lastName:     'Novák',
-    street:       'Lipová',
-    houseNumber:  '3',
-    city:         'Praha',
-    postalCode:   '13000',
+    vatId:                'CZ7001011234',
+    taxOfficeCode:        '451',
+    firstName:            'Jan',
+    lastName:             'Novák',
+    street:               'Lipová',
+    houseNumber:          '3',
+    city:                 'Praha',
+    postalCode:           '13000',
+    title:                'Ing.',          // titul (volitelné)
+    phone:                '123456789',     // telefon (volitelné, max 14 znaků)
+    orientationNumber:    '5a',            // číslo orientační (volitelné, max 4 znaky)
+    mainEconomicActivity: 6201,            // CZ-NACE kód hlavní ekonomické činnosti (volitelné)
 );
 ```
+
+Přehled polí specifických pro fyzické osoby:
+
+| Parametr | XML atribut | Umístění | Popis |
+|----------|-------------|----------|-------|
+| `title` | `titul` | VetaP (KH i DP3) | Akademický nebo profesní titul |
+| `phone` | `c_telef` | VetaP (KH i DP3) | Kontaktní telefon (max 14 znaků) |
+| `orientationNumber` | `c_orient` | VetaP (KH i DP3) | Číslo orientační adresy (max 4 znaky) |
+| `mainEconomicActivity` | `c_okec` | VetaD (pouze DP3) | Kód CZ-NACE převažující ekonomické činnosti |
 
 ### Typy plátce (`VatPayerType`)
 

@@ -44,6 +44,14 @@ final readonly class Taxpayer
         public readonly ?string $email,
         /** Territorial workplace code (optional, číselník PRACUFO) */
         public readonly ?string $taxOfficeWorkplaceCode,
+        /** Academic or professional title, natural persons only (titul) */
+        public readonly ?string $title,
+        /** Contact phone number, natural persons only (c_telef, max 14 chars) */
+        public readonly ?string $phone,
+        /** Orientation (secondary) house number, natural persons only (c_orient, max 4 chars) */
+        public readonly ?string $orientationNumber,
+        /** CZ-NACE main economic activity code, natural persons only (c_okec) */
+        public readonly ?int $mainEconomicActivity,
     ) {
         $this->dicNumeric = (string) preg_replace('/^[A-Z]+/', '', strtoupper($vatId));
     }
@@ -87,6 +95,10 @@ final readonly class Taxpayer
             lastName: null,
             email: $email,
             taxOfficeWorkplaceCode: $taxOfficeWorkplaceCode,
+            title: null,
+            phone: null,
+            orientationNumber: null,
+            mainEconomicActivity: null,
         );
     }
 
@@ -108,6 +120,10 @@ final readonly class Taxpayer
         VatPayerType $vatPayerType = VatPayerType::VatPayer,
         ?string $email = null,
         ?string $taxOfficeWorkplaceCode = null,
+        ?string $title = null,
+        ?string $phone = null,
+        ?string $orientationNumber = null,
+        ?int $mainEconomicActivity = null,
     ): self {
         self::assertVatId($vatId);
 
@@ -134,6 +150,10 @@ final readonly class Taxpayer
             lastName: $lastName,
             email: $email,
             taxOfficeWorkplaceCode: $taxOfficeWorkplaceCode,
+            title: $title,
+            phone: $phone,
+            orientationNumber: $orientationNumber,
+            mainEconomicActivity: $mainEconomicActivity,
         );
     }
 
