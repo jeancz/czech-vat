@@ -121,16 +121,19 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
         if ($t->isLegalEntity()) {
             $this->setAttr($el, 'zkrobchjm', $t->companyName);
         } else {
-            $this->setAttr($el, 'jmeno', $t->firstName);
+            $this->setAttr($el, 'titul',    $t->title);
+            $this->setAttr($el, 'jmeno',    $t->firstName);
             $this->setAttr($el, 'prijmeni', $t->lastName);
         }
 
-        $this->setAttr($el, 'ulice', $t->street);
-        $this->setAttr($el, 'c_pop', $t->houseNumber);
+        $this->setAttr($el, 'ulice',    $t->street);
+        $this->setAttr($el, 'c_orient', $t->orientationNumber);
+        $this->setAttr($el, 'c_pop',    $t->houseNumber);
         $this->setAttr($el, 'naz_obce', $t->city);
-        $this->setAttr($el, 'psc', $t->postalCode);
-        $this->setAttr($el, 'stat', $t->country);
-        $this->setAttr($el, 'email', $t->email);
+        $this->setAttr($el, 'psc',      $t->postalCode);
+        $this->setAttr($el, 'stat',     $t->country);
+        $this->setAttr($el, 'email',    $t->email);
+        $this->setAttr($el, 'c_telef',  $t->phone);
 
         $kh->appendChild($el);
     }

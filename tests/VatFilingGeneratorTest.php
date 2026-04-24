@@ -196,6 +196,89 @@ final class VatFilingGeneratorTest extends TestCase
         self::assertStringNotContainsString('mesic=', $xml);
     }
 
+    // ------------------------------------------------------------------ Natural person fields
+
+    private function naturalPersonTaxpayer(): Taxpayer
+    {
+        return Taxpayer::naturalPerson(
+            vatId:                'CZ7001011234',
+            taxOfficeCode:        '451',
+            firstName:            'Jan',
+            lastName:             'Novák',
+            street:               'Lipová',
+            houseNumber:          '3',
+            city:                 'Praha',
+            postalCode:           '13000',
+            title:                'Ing.',
+            phone:                '123456789',
+            orientationNumber:    '5a',
+            mainEconomicActivity: 6201,
+        );
+    }
+
+    public function testNaturalPersonFieldsAppearsInControlStatement(): void
+    {
+        $xml = (new VatFilingGenerator($this->naturalPersonTaxpayer(), $this->period, $this->buildCollection()))
+            ->generateControlStatement();
+
+        self::assertStringContainsString('titul="Ing."', $xml);
+        self::assertStringContainsString('c_telef="123456789"', $xml);
+        self::assertStringContainsString('c_orient="5a"', $xml);
+        // c_okec is not part of KH1 — confirm it is absent
+        self::assertStringNotContainsString('c_okec', $xml);
+    }
+
+    public function testNaturalPersonFieldsAppearsInVatReturn(): void
+    {
+        $xml = (new VatFilingGenerator($this->naturalPersonTaxpayer(), $this->period, $this->buildCollection()))
+            ->generateVatReturn();
+
+        self::assertStringContainsString('titul="Ing."', $xml);
+        self::assertStringContainsString('c_telef="123456789"', $xml);
+        self::assertStringContainsString('c_orient="5a"', $xml);
+        self::assertStringContainsString('c_okec="6201"', $xml);
+    }
+
+    public function testNaturalPersonOptionalFieldsOmittedWhenNull(): void
+    {
+        $taxpayer = Taxpayer::naturalPerson(
+            vatId:         'CZ7001011234',
+            taxOfficeCode: '451',
+            firstName:     'Jan',
+            lastName:      'Novák',
+            street:        'Lipová',
+            houseNumber:   '3',
+            city:          'Praha',
+            postalCode:    '13000',
+        );
+
+        $xml = (new VatFilingGenerator($taxpayer, $this->period, $this->buildCollection()))
+            ->generateVatReturn();
+
+        self::assertStringNotContainsString('titul=', $xml);
+        self::assertStringNotContainsString('c_telef=', $xml);
+        self::assertStringNotContainsString('c_orient=', $xml);
+        self::assertStringNotContainsString('c_okec=', $xml);
+    }
+
+    public function testNaturalPersonControlStatementPassesXsdValidation(): void
+    {
+        $xml = (new VatFilingGenerator($this->naturalPersonTaxpayer(), $this->period, $this->buildCollection()))
+            ->generateControlStatement();
+
+        XsdValidator::forControlStatement()->validate($xml);
+        $this->addToAssertionCount(1);
+    }
+
+    public function testNaturalPersonVatReturnPassesXsdValidation(): void
+    {
+        $xml = (new VatFilingGenerator($this->naturalPersonTaxpayer(), $this->period, $this->buildCollection()))
+            ->generateVatReturn();
+
+        XsdValidator::forVatReturn()->validate($xml);
+        $this->addToAssertionCount(1);
+    }
+
     // ------------------------------------------------------------------ XSD validation
 
     public function testControlStatementPassesXsdValidation(): void

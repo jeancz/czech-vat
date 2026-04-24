@@ -96,6 +96,10 @@ final class VatReturnBuilder extends AbstractXmlBuilder implements XmlGeneratorI
         $hasLiability = $this->totalOutputVat() !== 0.0 || $this->totalInputVat() !== 0.0;
         $el->setAttribute('trans', $hasLiability ? 'A' : 'N');
 
+        if (!$this->taxpayer->isLegalEntity()) {
+            $this->setAttr($el, 'c_okec', $this->taxpayer->mainEconomicActivity);
+        }
+
         $dp3->appendChild($el);
     }
 
@@ -113,16 +117,19 @@ final class VatReturnBuilder extends AbstractXmlBuilder implements XmlGeneratorI
         if ($t->isLegalEntity()) {
             $this->setAttr($el, 'zkrobchjm', $t->companyName);
         } else {
-            $this->setAttr($el, 'jmeno', $t->firstName);
+            $this->setAttr($el, 'titul',    $t->title);
+            $this->setAttr($el, 'jmeno',    $t->firstName);
             $this->setAttr($el, 'prijmeni', $t->lastName);
         }
 
-        $this->setAttr($el, 'ulice', $t->street);
-        $this->setAttr($el, 'c_pop', $t->houseNumber);
+        $this->setAttr($el, 'ulice',    $t->street);
+        $this->setAttr($el, 'c_orient', $t->orientationNumber);
+        $this->setAttr($el, 'c_pop',    $t->houseNumber);
         $this->setAttr($el, 'naz_obce', $t->city);
-        $this->setAttr($el, 'psc', $t->postalCode);
-        $this->setAttr($el, 'stat', $t->country);
-        $this->setAttr($el, 'email', $t->email);
+        $this->setAttr($el, 'psc',      $t->postalCode);
+        $this->setAttr($el, 'stat',     $t->country);
+        $this->setAttr($el, 'email',    $t->email);
+        $this->setAttr($el, 'c_telef',  $t->phone);
 
         $dp3->appendChild($el);
     }
