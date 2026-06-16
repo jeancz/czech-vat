@@ -25,18 +25,18 @@ final class VatFilingGeneratorTest extends TestCase
     protected function setUp(): void
     {
         $this->taxpayer = Taxpayer::legalEntity(
-            vatId:         'CZ12345678',
+            vatId: 'CZ12345678',
             taxOfficeCode: '452',
-            companyName:   'Test s.r.o.',
-            street:        'Testovací',
-            houseNumber:   '1',
-            city:          'Praha',
-            postalCode:    '11000',
-            email:         'test@test.cz',
+            companyName: 'Test s.r.o.',
+            street: 'Testovací',
+            houseNumber: '1',
+            city: 'Praha',
+            postalCode: '11000',
+            email: 'test@test.cz',
         );
 
         $this->period = TaxPeriod::monthly(2025, 1);
-        $this->rates  = VatRates::current();
+        $this->rates = VatRates::current();
     }
 
     // ------------------------------------------------------------------ helpers
@@ -51,20 +51,20 @@ final class VatFilingGeneratorTest extends TestCase
         return (new InvoiceCollection())
             ->addIssued(
                 new Invoice(
-                    lines:         [$this->line(VatRateType::Standard, 100_000, 21_000)],
-                    partnerVatId:  'CZ87654321',
-                    documentNumber:'FAK-2025-001',
-                    taxPointDate:  new \DateTimeImmutable('2025-01-15'),
+                    lines: [$this->line(VatRateType::Standard, 100_000, 21_000)],
+                    partnerVatId: 'CZ87654321',
+                    documentNumber: 'FAK-2025-001',
+                    taxPointDate: new \DateTimeImmutable('2025-01-15'),
                 ),
                 new Invoice([$this->line(VatRateType::Standard, 5_000, 1_050)]),
             )
             ->addReceived(
                 new Invoice(
-                    lines:                  [$this->line(VatRateType::Standard, 50_000, 10_500)],
-                    partnerVatId:           'CZ11111111',
-                    documentNumber:         'MY-REF-001',
+                    lines: [$this->line(VatRateType::Standard, 50_000, 10_500)],
+                    partnerVatId: 'CZ11111111',
+                    documentNumber: 'MY-REF-001',
                     supplierDocumentNumber: 'SUP-INV-999',
-                    taxPointDate:           new \DateTimeImmutable('2025-01-10'),
+                    taxPointDate: new \DateTimeImmutable('2025-01-10'),
                 )
             );
     }
@@ -140,12 +140,14 @@ final class VatFilingGeneratorTest extends TestCase
     public function testVatReturnStandardRateMapsToObrat23(): void
     {
         $invoices = (new InvoiceCollection())
-            ->addIssued(new Invoice(
-                [$this->line(VatRateType::Standard, 10_000, 2_100)],
-               partnerVatId: 'CZ87654321',
-               documentNumber: 'SUP-INV-999',
-               taxPointDate: new \DateTimeImmutable('2025-01-10'),
-            ));
+            ->addIssued(
+                new Invoice(
+                    [$this->line(VatRateType::Standard, 10_000, 2_100)],
+                    partnerVatId: 'CZ87654321',
+                    documentNumber: 'SUP-INV-999',
+                    taxPointDate: new \DateTimeImmutable('2025-01-10'),
+                )
+            );
 
         $xml = (new VatFilingGenerator($this->taxpayer, $this->period, $invoices))
             ->generateVatReturn();
@@ -173,10 +175,12 @@ final class VatFilingGeneratorTest extends TestCase
         $oldRates = VatRates::validUntil20231231();
 
         $invoices = (new InvoiceCollection())
-            ->addIssued(new Invoice([
-                new InvoiceLine(VatRateType::Reduced,       taxBase: 3_000, vat: 450, rates: $oldRates),
-                new InvoiceLine(VatRateType::SecondReduced, taxBase: 2_000, vat: 200, rates: $oldRates),
-            ]));
+            ->addIssued(
+                new Invoice([
+                    new InvoiceLine(VatRateType::Reduced, taxBase: 3_000, vat: 450, rates: $oldRates),
+                    new InvoiceLine(VatRateType::SecondReduced, taxBase: 2_000, vat: 200, rates: $oldRates),
+                ])
+            );
 
         $xml = (new VatFilingGenerator($this->taxpayer, $this->period, $invoices))
             ->generateVatReturn();
@@ -189,7 +193,7 @@ final class VatFilingGeneratorTest extends TestCase
     public function testQuarterlyPeriod(): void
     {
         $period = TaxPeriod::quarterly(2025, 1);
-        $xml    = (new VatFilingGenerator($this->taxpayer, $period, $this->buildCollection()))
+        $xml = (new VatFilingGenerator($this->taxpayer, $period, $this->buildCollection()))
             ->generateVatReturn();
 
         self::assertStringContainsString('ctvrt="1"', $xml);
@@ -201,17 +205,17 @@ final class VatFilingGeneratorTest extends TestCase
     private function naturalPersonTaxpayer(): Taxpayer
     {
         return Taxpayer::naturalPerson(
-            vatId:                'CZ7001011234',
-            taxOfficeCode:        '451',
-            firstName:            'Jan',
-            lastName:             'Novák',
-            street:               'Lipová',
-            houseNumber:          '3',
-            city:                 'Praha',
-            postalCode:           '13000',
-            title:                'Ing.',
-            phone:                '123456789',
-            orientationNumber:    '5a',
+            vatId: 'CZ7001011234',
+            taxOfficeCode: '451',
+            firstName: 'Jan',
+            lastName: 'Novák',
+            street: 'Lipová',
+            houseNumber: '3',
+            city: 'Praha',
+            postalCode: '13000',
+            title: 'Ing.',
+            phone: '123456789',
+            orientationNumber: '5a',
             mainEconomicActivity: 6201,
         );
     }
@@ -242,14 +246,14 @@ final class VatFilingGeneratorTest extends TestCase
     public function testNaturalPersonOptionalFieldsOmittedWhenNull(): void
     {
         $taxpayer = Taxpayer::naturalPerson(
-            vatId:         'CZ7001011234',
+            vatId: 'CZ7001011234',
             taxOfficeCode: '451',
-            firstName:     'Jan',
-            lastName:      'Novák',
-            street:        'Lipová',
-            houseNumber:   '3',
-            city:          'Praha',
-            postalCode:    '13000',
+            firstName: 'Jan',
+            lastName: 'Novák',
+            street: 'Lipová',
+            houseNumber: '3',
+            city: 'Praha',
+            postalCode: '13000',
         );
 
         $xml = (new VatFilingGenerator($taxpayer, $this->period, $this->buildCollection()))
@@ -259,6 +263,42 @@ final class VatFilingGeneratorTest extends TestCase
         self::assertStringNotContainsString('c_telef=', $xml);
         self::assertStringNotContainsString('c_orient=', $xml);
         self::assertStringNotContainsString('c_okec=', $xml);
+    }
+
+    public function testApprovedPersonAppearsInControlStatement(): void
+    {
+        $taxpayer = Taxpayer::legalEntity(
+            vatId: 'CZ12345678',
+            taxOfficeCode: '452',
+            companyName: 'Rome s.r.o.',
+            street: 'Testovací',
+            houseNumber: '1',
+            city: 'Praha',
+            postalCode: '11000',
+            email: 'test@test.cz',
+            approvedPersonFirstName: 'Pilát',
+            approvedPersonLastName: 'Pontský',
+            approvedPersonRole: 'PREFEKT',
+        );
+
+        $xml = (new VatFilingGenerator($taxpayer, $this->period, $this->buildCollection()))
+            ->generateControlStatement();
+
+        self::assertStringContainsString('opr_jmeno="Pilát"', $xml);
+        self::assertStringContainsString('opr_prijmeni="Pontský"', $xml);
+        self::assertStringContainsString('opr_postaveni="PREFEKT"', $xml);
+
+        XsdValidator::forControlStatement()->validate($xml);
+    }
+
+    public function testApprovedPersonOmittedWhenNull(): void
+    {
+        $xml = (new VatFilingGenerator($this->taxpayer, $this->period, $this->buildCollection()))
+            ->generateControlStatement();
+
+        self::assertStringNotContainsString('opr_jmeno', $xml);
+        self::assertStringNotContainsString('opr_prijmeni', $xml);
+        self::assertStringNotContainsString('opr_postaveni', $xml);
     }
 
     public function testNaturalPersonControlStatementPassesXsdValidation(): void

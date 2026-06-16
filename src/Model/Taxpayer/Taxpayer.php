@@ -52,6 +52,12 @@ final readonly class Taxpayer
         public readonly ?string $orientationNumber,
         /** CZ-NACE main economic activity code, natural persons only (c_okec) */
         public readonly ?int $mainEconomicActivity,
+        /** Authorised person — first name (opr_jmeno) */
+        public readonly ?string $approvedPersonFirstName = null,
+        /** Authorised person — last name (opr_prijmeni) */
+        public readonly ?string $approvedPersonLastName = null,
+        /** Authorised person — role/position, e.g. "JEDNATEL" (opr_postaveni) */
+        public readonly ?string $approvedPersonRole = null,
     ) {
         $this->dicNumeric = (string) preg_replace('/^[A-Z]+/', '', strtoupper($vatId));
     }
@@ -73,6 +79,9 @@ final readonly class Taxpayer
         VatPayerType $vatPayerType = VatPayerType::VatPayer,
         ?string $email = null,
         ?string $taxOfficeWorkplaceCode = null,
+        ?string $approvedPersonFirstName = null,
+        ?string $approvedPersonLastName = null,
+        ?string $approvedPersonRole = null,
     ): self {
         self::assertVatId($vatId);
 
@@ -99,6 +108,9 @@ final readonly class Taxpayer
             phone: null,
             orientationNumber: null,
             mainEconomicActivity: null,
+            approvedPersonFirstName: $approvedPersonFirstName,
+            approvedPersonLastName: $approvedPersonLastName,
+            approvedPersonRole: $approvedPersonRole,
         );
     }
 
@@ -124,6 +136,9 @@ final readonly class Taxpayer
         ?string $phone = null,
         ?string $orientationNumber = null,
         ?int $mainEconomicActivity = null,
+        ?string $approvedPersonFirstName = null,
+        ?string $approvedPersonLastName = null,
+        ?string $approvedPersonRole = null,
     ): self {
         self::assertVatId($vatId);
 
@@ -154,6 +169,9 @@ final readonly class Taxpayer
             phone: $phone,
             orientationNumber: $orientationNumber,
             mainEconomicActivity: $mainEconomicActivity,
+            approvedPersonFirstName: $approvedPersonFirstName,
+            approvedPersonLastName: $approvedPersonLastName,
+            approvedPersonRole: $approvedPersonRole,
         );
     }
 
