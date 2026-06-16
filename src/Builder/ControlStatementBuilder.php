@@ -135,6 +135,11 @@ final class ControlStatementBuilder extends AbstractXmlBuilder implements XmlGen
         $this->setAttr($el, 'email',    $t->email);
         $this->setAttr($el, 'c_telef',  $t->phone);
 
+        // Authorised person (oprávněná osoba), e.g. statutory representative of a legal entity
+        $this->setAttr($el, 'opr_jmeno',     $t->approvedPersonFirstName);
+        $this->setAttr($el, 'opr_prijmeni',  $t->approvedPersonLastName);
+        $this->setAttr($el, 'opr_postaveni', $t->approvedPersonRole);
+
         $kh->appendChild($el);
     }
 
